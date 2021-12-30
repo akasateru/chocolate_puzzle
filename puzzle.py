@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-import time
 
 success = [[1]*10 for i in range(6)]
 result = [[0]*10 for i in range(6)]
@@ -18,6 +17,8 @@ puzzle = [[[1,1,1],[1,0,1]],
           [[1,1,0],[1,1,1]],
           [[1,1,1,1],[0,1,0,0]],
           [[0,0,1],[0,0,1],[1,1,1]]]
+
+a = np.loadtxt("numbers.csv",delimiter=',')
 
 def culclate(result,result_pzl,number,i,flag,run_once):
   i+=1
