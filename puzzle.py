@@ -66,5 +66,4 @@ number1 = [0,1,2,3,4,5,6,7,8,9,10,11]
 number2 = [1,2,3,4,5,6,7,8,9,10,11,0]
 number3 = [2,3,4,5,6,7,8,9,10,11,0,1]
 
-
 culclate(result,result_pzl,number1,i=0,flag=True,run_once=0)
