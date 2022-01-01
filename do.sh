@@ -1,3 +1,2 @@
-set -e
-g++ puzzle.cc
-./a.out
+time python make_number.py
+time python puzzle.py > result.txt
