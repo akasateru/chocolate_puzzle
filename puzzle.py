@@ -1,8 +1,5 @@
 import pandas as pd
 import numpy as np
-
-result = np.array([[0]*6 for i in range(10)])
-number = [0,1,2,3,4,5,6,7,8,9,10,11]
           
 puzzle = [[[1,1,1],[1,0,1]],
           [[2,2,0],[0,2,2],[0,0,2]],
@@ -17,9 +14,12 @@ puzzle = [[[1,1,1],[1,0,1]],
           [[11,11,11,11],[0,11,0,0]],
           [[0,0,12],[0,0,12],[12,12,12]]]
 
-def culclate(result,number,flag):
+def culclate():
+  global stock
   global try_count
   global success_stock
+  global result
+  # global result
   try_count+=1
   # 全てのマスが１で埋まった場合,成功
   if result.min() != 0:
@@ -30,29 +30,43 @@ def culclate(result,number,flag):
       success_stock.append(result)
     return 0
   else:
-    for puz_i in number:
-      if flag==True:
-        # パズルを順に動かす
+    # 12ピースを埋めていく
+    for puz_i in range(12):
+      if puz_i not in stock:
+        print("puz_i:",puz_i)
+        # ピースを回す
+        # ピースを左上から順に動かす
+        print(pd.DataFrame(puzzle[puz_i]))
         for row_f in range(10-len(puzzle[puz_i])+1):
           for col_f in range(6-len(puzzle[puz_i][0])+1):
-            #resultにパズルを入れていく-------------------
             row = len(puzzle[puz_i])
             col = len(puzzle[puz_i][0])
             result_kari = np.array(result)[row_f:row_f+row, col_f:col_f+col]
+            # resultと被っていなければ、ピースを埋める
             if (result_kari*puzzle[puz_i]).max() == 0:
-              result = np.array(result)
               result[row_f:row_f+row,col_f:col_f+col] += puzzle[puz_i]
-              number.remove(puz_i)
-              culclate(result,number,flag)
+              stock.append(puz_i)
+              print("success")
+              print("stock:",stock)
+              print(pd.DataFrame(result),"\n")
+              culclate()
               break
+            elif row_f+row==10 and col_f+col==6:
+              result = np.where(result==stock[-1]+1,0,result)
+              p = stock.pop(-1)
+              print("fault")
+              print("stock:",stock)
+              print(pd.DataFrame(result),"\n")
+              return 0
           else:
             continue
           break
-        flag=False
-      else:
-        return 0
+        
 
 try_count = 0
+result = np.array([[0]*6 for i in range(10)])
 success_stock = []
-culclate(result,number,flag=True)
-print("試行回数：",try_count)
+stock = []
+
+culclate()
+print("試行回数:",try_count)
