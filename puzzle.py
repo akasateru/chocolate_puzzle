@@ -19,7 +19,6 @@ def culclate():
   global try_count
   global success_stock
   global result
-  # global result
   try_count+=1
   # 全てのマスが１で埋まった場合,成功
   if result.min() != 0:
@@ -37,30 +36,37 @@ def culclate():
         # ピースを回す
         # ピースを左上から順に動かす
         print(pd.DataFrame(puzzle[puz_i]))
+        flag = True
         for row_f in range(10-len(puzzle[puz_i])+1):
-          for col_f in range(6-len(puzzle[puz_i][0])+1):
-            row = len(puzzle[puz_i])
-            col = len(puzzle[puz_i][0])
-            result_kari = np.array(result)[row_f:row_f+row, col_f:col_f+col]
-            # resultと被っていなければ、ピースを埋める
-            if (result_kari*puzzle[puz_i]).max() == 0:
-              result[row_f:row_f+row,col_f:col_f+col] += puzzle[puz_i]
-              stock.append(puz_i)
-              print("success")
-              print("stock:",stock)
-              print(pd.DataFrame(result),"\n")
-              culclate()
-              break
-            elif row_f+row==10 and col_f+col==6:
-              result = np.where(result==stock[-1]+1,0,result)
-              p = stock.pop(-1)
-              print("fault")
-              print("stock:",stock)
-              print(pd.DataFrame(result),"\n")
-              return 0
+          if flag==True:
+            for col_f in range(6-len(puzzle[puz_i][0])+1):
+              row = len(puzzle[puz_i])
+              col = len(puzzle[puz_i][0])
+              result_kari = np.array(result)[row_f:row_f+row, col_f:col_f+col]
+              # resultと被っていなければ、ピースを埋める
+              if (result_kari*puzzle[puz_i]).max() == 0:
+                result[row_f:row_f+row,col_f:col_f+col] += puzzle[puz_i]
+                stock.append(puz_i)
+                print("success")
+                print("stock:",stock)
+                print(pd.DataFrame(result),"\n")
+                culclate()
+                flag = False
+                break
+              elif row_f+row==10 and col_f+col==6:
+                result = np.where(result==stock[-1]+1,0,result)
+                stock.pop(-1)
+                print("fault")
+                print("stock:",stock)
+                print(pd.DataFrame(result),"\n")
+                return 0
           else:
-            continue
-          break
+            break
+    result = np.where(result==stock[-1]+1,0,result)
+    stock.pop(-1)
+    return 0
+
+
         
 
 try_count = 0

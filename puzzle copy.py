@@ -14,18 +14,9 @@ puzzle = [[[1,1,1],[1,0,1]],
           [[11,11,11,11],[0,11,0,0]],
           [[0,0,12],[0,0,12],[12,12,12]]]
 
-def culclate(stock):
-  if len(stock)==12:
-    return 0
-  else:
-    for puz_i in range(12):
-      if not puz_i in stock:
-        stock.append(puz_i)
-        print(stock)
-        culclate(stock)
 
 
-culclate(stock=[])
+
 
 
 
