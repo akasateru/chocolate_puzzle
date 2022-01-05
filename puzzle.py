@@ -1,5 +1,8 @@
 import pandas as pd
 import numpy as np
+import time
+
+start = time.time()
           
 puzzle = [[[1,1,1],[1,0,1]],
           [[2,2,0],[0,2,2],[0,0,2]],
@@ -87,3 +90,6 @@ stock = []
 
 culclate()
 print("試行回数:",try_count)
+
+end = time.time() - start
+print(f"{end:3f}s")
