@@ -28,46 +28,57 @@ def culclate():
       print("-----------------------")
       success_stock.append(result)
     return 0
+  # もしこれ以上やってもダメだったらreturn 0
   else:
     # 12ピースを埋めていく
     for puz_i in range(12):
       if puz_i not in stock:
-        print("puz_i:",puz_i)
         # ピースを回す
-        # ピースを左上から順に動かす
-        print(pd.DataFrame(puzzle[puz_i]))
-        flag = True
-        for row_f in range(10-len(puzzle[puz_i])+1):
-          if flag==True:
-            for col_f in range(6-len(puzzle[puz_i][0])+1):
-              row = len(puzzle[puz_i])
-              col = len(puzzle[puz_i][0])
-              result_kari = np.array(result)[row_f:row_f+row, col_f:col_f+col]
-              # resultと被っていなければ、ピースを埋める
-              if (result_kari*puzzle[puz_i]).max() == 0:
-                result[row_f:row_f+row,col_f:col_f+col] += puzzle[puz_i]
-                stock.append(puz_i)
-                print("success")
-                print("stock:",stock)
-                print(pd.DataFrame(result),"\n")
-                culclate()
-                flag = False
+        puzzle_stock = []
+        judge = True
+        for turn in range(8):
+          # ピースを回して前に出てきた形じゃなかったら進む
+          if puzzle[puz_i] not in puzzle_stock:
+            # ピースを左上から順に動かす
+            print(pd.DataFrame(puzzle[puz_i]))
+            flag = True
+            for row_f in range(10-len(puzzle[puz_i])+1):
+              if flag==True:
+                for col_f in range(6-len(puzzle[puz_i][0])+1):
+                  row = len(puzzle[puz_i])
+                  col = len(puzzle[puz_i][0])
+                  result_kari = np.array(result)[row_f:row_f+row, col_f:col_f+col]
+                  # 空いていたらピースをはめる
+                  if (result_kari*puzzle[puz_i]).max() == 0:
+                    result[row_f:row_f+row,col_f:col_f+col] += puzzle[puz_i]
+                    stock.append(puz_i)
+                    print("success")
+                    print("stock:",stock)
+                    print(pd.DataFrame(result),"\n")
+                    culclate()
+                    judge = False
+                    flag = False
+                    break
+              else:
                 break
-              elif row_f+row==10 and col_f+col==6:
-                result = np.where(result==stock[-1]+1,0,result)
-                stock.pop(-1)
-                print("fault")
-                print("stock:",stock)
-                print(pd.DataFrame(result),"\n")
-                return 0
-          else:
-            break
+            puzzle_stock.append(puzzle[puz_i])
+
+          puzzle[puz_i] = np.rot90(np.array(puzzle[puz_i])).tolist()
+          if turn == 3:
+            puzzle[puz_i] = np.flipud(np.array(puzzle[puz_i])).tolist()
+          if turn == 7 and judge == True:
+            result = np.where(result==stock[-1]+1,0,result)
+            stock.pop(-1)
+            print("fault")
+            print("stock:",stock)
+            print(pd.DataFrame(result),"\n")
+            return 0
     result = np.where(result==stock[-1]+1,0,result)
     stock.pop(-1)
-    return 0
-
-
-        
+    print("fin")
+    print("stock:",stock)
+    print(pd.DataFrame(result),"\n")
+    return 0        
 
 try_count = 0
 result = np.array([[0]*6 for i in range(10)])
